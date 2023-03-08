@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'package:figure_skating_jumps/exceptions/conflict_exception.dart';
 import 'package:figure_skating_jumps/exceptions/invalid_email_exception.dart';
 import 'package:figure_skating_jumps/exceptions/null_user_exception.dart';
+import 'package:figure_skating_jumps/exceptions/too_many_attempts.dart';
+import 'package:figure_skating_jumps/exceptions/user_not_found_exeption.dart';
 import 'package:figure_skating_jumps/exceptions/weak_password_exception.dart';
+import 'package:figure_skating_jumps/exceptions/wrong_password_exepction.dart';
 import 'package:figure_skating_jumps/models/skating_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -78,8 +81,8 @@ class UserClient {
   /// Signs in the user with the give [email] and [password].
   Future<void> signIn(String email, String password) async {
     try {
-      await _firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
 
       if (_firebaseAuth.currentUser == null) {
         throw NullUserException();
@@ -91,6 +94,18 @@ class UserClient {
           .get();
       _currentSkatingUser = SkatingUser.fromFirestore(
           _firebaseAuth.currentUser?.uid, userInfoSnapshot);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "user-not-found":
+          throw UserNotFoundException();
+        case "wrong-password":
+          throw WrongPasswordException();
+        case "too-many-requests":
+          throw TooManyAttemptsException();
+        default:
+          developer.log(e.toString());
+          rethrow;
+      }
     } catch (e) {
       developer.log(e.toString());
       rethrow;

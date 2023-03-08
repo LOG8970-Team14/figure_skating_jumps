@@ -1,3 +1,11 @@
+import 'dart:io';
+
+import 'package:figure_skating_jumps/exceptions/empty_field_exeption.dart';
+import 'package:figure_skating_jumps/exceptions/invalid_email_exception.dart';
+import 'package:figure_skating_jumps/exceptions/too_many_attempts.dart';
+import 'package:figure_skating_jumps/exceptions/user_not_found_exeption.dart';
+import 'package:figure_skating_jumps/exceptions/wrong_password_exepction.dart';
+import 'package:figure_skating_jumps/services/user_client.dart';
 import 'package:figure_skating_jumps/widgets/titles/page_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -18,6 +26,8 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   String _email = '';
   String _password = '';
+  String _errorMessage = '';
+  String _connectionLabelBtn = connectionButton;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   final _connectionInfoKey = GlobalKey<FormState>();
@@ -29,6 +39,42 @@ class _LoginViewState extends State<LoginView> {
     super.initState();
   }
 
+  Future<void> onConnection() async {
+    if (_connectionInfoKey.currentState == null ||
+        !_connectionInfoKey.currentState!.validate()) {
+      return;
+    }
+    setState(() {
+      _connectionLabelBtn = connectingButton;
+    });
+    try {
+      await UserClient().signIn(_email, _password);
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, '/');
+    } on EmptyFieldException {
+      setState(() {
+        _errorMessage = EmptyFieldException().uiMessage;
+      });
+    } on UserNotFoundException {
+      setState(() {
+        _errorMessage = UserNotFoundException().uiMessage;
+      });
+    } on WrongPasswordException {
+      setState(() {
+        _errorMessage = WrongPasswordException().uiMessage;
+      });
+    } on TooManyAttemptsException {
+      setState(() {
+        _errorMessage = TooManyAttemptsException().uiMessage;
+      });
+    } catch (e) {
+      _errorMessage = connectionImpossible;
+    }
+    setState(() {
+      _connectionLabelBtn = connectionButton;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +83,8 @@ class _LoginViewState extends State<LoginView> {
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
             },
-            child: SingleChildScrollView(
-                child: Center(
+            child: Center(
+                child: SingleChildScrollView(
                     child: Column(
               children: [
                 Container(
@@ -68,6 +114,9 @@ class _LoginViewState extends State<LoginView> {
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
                                     controller: _emailController,
+                                    validator: (value) {
+                                      return _emailValidator(value);
+                                    },
                                     onChanged: (value) {
                                       setState(() {
                                         _email = value;
@@ -84,6 +133,9 @@ class _LoginViewState extends State<LoginView> {
                                         AutovalidateMode.onUserInteraction,
                                     controller: _passwordController,
                                     obscureText: true,
+                                    validator: (value) {
+                                      return _passValidator(value);
+                                    },
                                     onChanged: (value) {
                                       setState(() {
                                         _password = value;
@@ -96,14 +148,17 @@ class _LoginViewState extends State<LoginView> {
                                     ),
                                   )
                                 ])),
-                            const SizedBox(height: 32),
+                            Container(
+                                margin: const EdgeInsets.all(8),
+                                child: Text(
+                                  _errorMessage,
+                                  style: const TextStyle(
+                                      color: errorColor, fontSize: 16),
+                                )),
                             IceButton(
-                                text: connectionButton,
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/',
-                                  );
+                                text: _connectionLabelBtn,
+                                onPressed: () async {
+                                  onConnection();
                                 },
                                 textColor: paleText,
                                 color: primaryColor,
@@ -130,5 +185,19 @@ class _LoginViewState extends State<LoginView> {
                         ))),
               ],
             )))));
+  }
+
+  String? _emailValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return pleaseFillField;
+    }
+    return null;
+  }
+
+  String? _passValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return pleaseFillField;
+    }
+    return null;
   }
 }
