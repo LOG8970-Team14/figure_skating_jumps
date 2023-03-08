@@ -127,7 +127,7 @@ class UserClient {
     try {
       await _firestore
           .collection(_userCollectionString)
-          .doc("cvr3qAlbUIWgNUhkp9JgRPwnZ092")
+          .doc(user)
           .set({"firstName": firstName, "lastName": lastName},
               SetOptions(merge: true));
     } catch (e) {
