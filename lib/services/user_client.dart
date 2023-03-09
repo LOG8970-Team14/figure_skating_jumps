@@ -86,17 +86,9 @@ class UserClient {
       _currentSkatingUser = SkatingUser.fromFirestore(
           _firebaseAuth.currentUser?.uid, userInfoSnapshot);
     } on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case "user-not-found":
-          throw NullUserException();
-        case "wrong-password":
-          throw WrongPasswordException();
-        case "too-many-requests":
-          throw TooManyAttemptsException();
-        default:
-          developer.log(e.toString());
-          rethrow;
-      }
+      ExceptionUtils.handleFirebaseAuthException(e);
+      developer.log(e.toString());
+      rethrow;
     } catch (e) {
       developer.log(e.toString());
       rethrow;
