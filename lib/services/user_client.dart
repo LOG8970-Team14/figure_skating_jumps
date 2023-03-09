@@ -1,6 +1,4 @@
 import 'package:figure_skating_jumps/exceptions/null_user_exception.dart';
-import 'package:figure_skating_jumps/exceptions/too_many_attempts_exception.dart';
-import 'package:figure_skating_jumps/exceptions/wrong_password_excepction.dart';
 import 'package:figure_skating_jumps/models/skating_user.dart';
 import 'package:figure_skating_jumps/utils/exception_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
