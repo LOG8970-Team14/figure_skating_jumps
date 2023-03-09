@@ -45,7 +45,7 @@ class _LoginViewState extends State<LoginView> {
       _connectionLabelBtn = connectingButton;
     });
     try {
-      await UserClient().signIn(_email, _password);
+      await UserClient().signIn(email: _email, password: _password);
       // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, '/');
     } on EmptyFieldException {
