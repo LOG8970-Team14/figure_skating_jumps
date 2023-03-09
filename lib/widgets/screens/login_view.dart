@@ -1,7 +1,7 @@
 import 'package:figure_skating_jumps/exceptions/empty_field_exception.dart';
 import 'package:figure_skating_jumps/exceptions/null_user_exception.dart';
 import 'package:figure_skating_jumps/exceptions/too_many_attempts_exception.dart';
-import 'package:figure_skating_jumps/exceptions/wrong_password_excepction.dart';
+import 'package:figure_skating_jumps/exceptions/wrong_password_exception.dart';
 import 'package:figure_skating_jumps/services/user_client.dart';
 import 'package:figure_skating_jumps/widgets/titles/page_title.dart';
 import 'package:flutter/material.dart';
