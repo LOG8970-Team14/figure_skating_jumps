@@ -1,8 +1,4 @@
-import 'package:figure_skating_jumps/exceptions/empty_field_exception.dart';
 import 'package:figure_skating_jumps/exceptions/ice_exception.dart';
-import 'package:figure_skating_jumps/exceptions/null_user_exception.dart';
-import 'package:figure_skating_jumps/exceptions/too_many_attempts_exception.dart';
-import 'package:figure_skating_jumps/exceptions/wrong_password_exception.dart';
 import 'package:figure_skating_jumps/services/user_client.dart';
 import 'package:figure_skating_jumps/widgets/titles/page_title.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +61,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: primaryColor,
+        backgroundColor: primaryColorLight,
         body: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
@@ -86,7 +82,7 @@ class _LoginViewState extends State<LoginView> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20)),
                     child: Container(
-                        margin: const EdgeInsets.all(32.0),
+                        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
                         child: Column(
                           children: [
                             const Padding(
@@ -182,7 +178,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   String? _passValidator(String? value) {
-    if (value == null || value.trim().isEmpty) {
+    if (value == null || value.isEmpty) {
       return pleaseFillField;
     }
     return null;
