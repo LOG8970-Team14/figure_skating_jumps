@@ -1,14 +1,14 @@
 import 'package:figure_skating_jumps/constants/lang_fr.dart';
 import 'package:figure_skating_jumps/exceptions/ice_exception.dart';
 
-class TooManyAttemptsException implements IceException {
+class EmptyFieldException implements IceException {
   @override
   String get devMessage {
-    return "We have blocked all requests from this device due to unusual activity. Try again later.";
+    return "Given String is empty or null.";
   }
 
   @override
   String get uiMessage {
-    return tooManyAttemptsException;
+    return emptyFieldException;
   }
 }

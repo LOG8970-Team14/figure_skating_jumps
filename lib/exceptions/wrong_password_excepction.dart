@@ -9,6 +9,6 @@ class WrongPasswordException implements IceException {
 
   @override
   String get uiMessage {
-    return wrongPasswordExeption;
+    return wrongPasswordException;
   }
 }

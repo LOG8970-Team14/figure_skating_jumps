@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'package:figure_skating_jumps/exceptions/conflict_exception.dart';
 import 'package:figure_skating_jumps/exceptions/invalid_email_exception.dart';
 import 'package:figure_skating_jumps/exceptions/null_user_exception.dart';
-import 'package:figure_skating_jumps/exceptions/too_many_attempts.dart';
-import 'package:figure_skating_jumps/exceptions/user_not_found_exeption.dart';
+import 'package:figure_skating_jumps/exceptions/too_many_attempts_exception.dart';
 import 'package:figure_skating_jumps/exceptions/weak_password_exception.dart';
-import 'package:figure_skating_jumps/exceptions/wrong_password_exepction.dart';
+import 'package:figure_skating_jumps/exceptions/wrong_password_excepction.dart';
 import 'package:figure_skating_jumps/models/skating_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -97,7 +96,7 @@ class UserClient {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "user-not-found":
-          throw UserNotFoundException();
+          throw NullUserException();
         case "wrong-password":
           throw WrongPasswordException();
         case "too-many-requests":

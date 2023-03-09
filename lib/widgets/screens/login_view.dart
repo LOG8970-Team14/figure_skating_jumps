@@ -1,7 +1,7 @@
-import 'package:figure_skating_jumps/exceptions/empty_field_exeption.dart';
-import 'package:figure_skating_jumps/exceptions/too_many_attempts.dart';
-import 'package:figure_skating_jumps/exceptions/user_not_found_exeption.dart';
-import 'package:figure_skating_jumps/exceptions/wrong_password_exepction.dart';
+import 'package:figure_skating_jumps/exceptions/empty_field_exception.dart';
+import 'package:figure_skating_jumps/exceptions/null_user_exception.dart';
+import 'package:figure_skating_jumps/exceptions/too_many_attempts_exception.dart';
+import 'package:figure_skating_jumps/exceptions/wrong_password_excepction.dart';
 import 'package:figure_skating_jumps/services/user_client.dart';
 import 'package:figure_skating_jumps/widgets/titles/page_title.dart';
 import 'package:flutter/material.dart';
@@ -52,9 +52,9 @@ class _LoginViewState extends State<LoginView> {
       setState(() {
         _errorMessage = EmptyFieldException().uiMessage;
       });
-    } on UserNotFoundException {
+    } on NullUserException {
       setState(() {
-        _errorMessage = UserNotFoundException().uiMessage;
+        _errorMessage = NullUserException().uiMessage;
       });
     } on WrongPasswordException {
       setState(() {
@@ -155,7 +155,7 @@ class _LoginViewState extends State<LoginView> {
                             IceButton(
                                 text: _connectionLabelBtn,
                                 onPressed: () async {
-                                  onConnection();
+                                  await onConnection();
                                 },
                                 textColor: paleText,
                                 color: primaryColor,
