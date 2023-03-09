@@ -30,7 +30,7 @@ class UserClient {
   }
 
   Future<void> signUp(
-      String email, String password, SkatingUser userInfo) async {
+      {required String email, required String password, required SkatingUser userInfo}) async {
     UserCredential userCreds;
     try {
       userCreds = await _firebaseAuth.createUserWithEmailAndPassword(
@@ -66,7 +66,7 @@ class UserClient {
   }
 
   /// Signs in the user with the give [email] and [password].
-  Future<void> signIn(String email, String password) async {
+  Future<void> signIn({required String email, required String password}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -97,14 +97,14 @@ class UserClient {
     }
   }
 
-  void delete() async {
+  Future<void> delete() async {
     try {
       if (_firebaseAuth.currentUser == null) {
         throw NullUserException();
       }
       String? uid = _firebaseAuth.currentUser?.uid;
-      _firebaseAuth.currentUser?.delete();
-      _firestore.collection(_userCollectionString).doc(uid).delete();
+      await _firebaseAuth.currentUser?.delete();
+      await _firestore.collection(_userCollectionString).doc(uid).delete();
     } catch (e) {
       developer.log(e.toString());
       rethrow;
@@ -112,7 +112,7 @@ class UserClient {
   }
 
   /// Put in a try catch. Throws an exception when there is an error during the operation
-  Future<SkatingUser> getUserById(String id) async {
+  Future<SkatingUser> getUserById({required String id}) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> userInfo =
           await _firestore.collection(_userCollectionString).doc(id).get();
@@ -123,7 +123,8 @@ class UserClient {
     }
   }
 
-  void changeName(String user, String firstName, String lastName) async {
+  Future<void> changeName(
+      {required String user, required String firstName, required String lastName}) async {
     try {
       await _firestore
           .collection(_userCollectionString)
@@ -136,7 +137,7 @@ class UserClient {
     }
   }
 
-  void changePassword(String user, String password) async {
+  Future<void> changePassword({required String user, required String password}) async {
     try {
       await _firebaseAuth.currentUser?.updatePassword(password);
     } on FirebaseAuthException catch (e) {
@@ -150,7 +151,7 @@ class UserClient {
     }
   }
 
-  void resetPassword(String email) async {
+  Future<void> resetPassword({required String email}) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
@@ -164,7 +165,7 @@ class UserClient {
     }
   }
 
-  void addSkater({required String skaterId, required String coachId}) async {
+  Future<void> addSkater({required String skaterId, required String coachId}) async {
     try {
       SkatingUser skater = SkatingUser.fromFirestore(
           skaterId,
@@ -196,7 +197,7 @@ class UserClient {
     }
   }
 
-  void removeSkater({required String skaterId, required String coachId}) async {
+  Future<void> removeSkater({required String skaterId, required String coachId}) async {
     try {
       SkatingUser skater = SkatingUser.fromFirestore(
           skaterId,
