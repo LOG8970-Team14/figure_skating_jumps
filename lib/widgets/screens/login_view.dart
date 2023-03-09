@@ -1,4 +1,5 @@
 import 'package:figure_skating_jumps/exceptions/empty_field_exception.dart';
+import 'package:figure_skating_jumps/exceptions/ice_exception.dart';
 import 'package:figure_skating_jumps/exceptions/null_user_exception.dart';
 import 'package:figure_skating_jumps/exceptions/too_many_attempts_exception.dart';
 import 'package:figure_skating_jumps/exceptions/wrong_password_exception.dart';
@@ -46,23 +47,12 @@ class _LoginViewState extends State<LoginView> {
     });
     try {
       await UserClient().signIn(email: _email, password: _password);
-      // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, '/');
-    } on EmptyFieldException {
+      if (mounted) {
+        Navigator.pushNamed(context, '/ManageDevices');
+      }
+    } on IceException catch (e) {
       setState(() {
-        _errorMessage = EmptyFieldException().uiMessage;
-      });
-    } on NullUserException {
-      setState(() {
-        _errorMessage = NullUserException().uiMessage;
-      });
-    } on WrongPasswordException {
-      setState(() {
-        _errorMessage = WrongPasswordException().uiMessage;
-      });
-    } on TooManyAttemptsException {
-      setState(() {
-        _errorMessage = TooManyAttemptsException().uiMessage;
+        _errorMessage = e.uiMessage;
       });
     } catch (e) {
       _errorMessage = connectionImpossible;
